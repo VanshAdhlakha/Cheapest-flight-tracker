@@ -16,6 +16,26 @@ async function getFlights() {
       statusEl.textContent = "no data";
       return;
     }
+
+
+    const index = Math.floor(Math.random() * data.length);
+const show = data[index].show;
+const airline = show.name;
+ const price = show.id ;
+
+resultEl.innerHTML =
+          "<div class='card'>" +
+     "<div class='price'>₹" +
+                                price +
+"</div>" +
+        "<div><b>Airline:</b> " +
+                                  airline +
+ "</div>" +
+"</div>";
+
+
+
+    statusEl.textContent = "done";
   } catch (err) {
     statusEl.textContent = "error";
   }
