@@ -5,6 +5,15 @@ const resultEl = document.getElementById("result");
 btn.addEventListener("click", getFlights);
 
 async function getFlights() {
+  const from = document.getElementById("from").value.trim().toUpperCase();
+  const to = document.getElementById("to").value.trim().toUpperCase();
+
+  if (!from || !to) {
+    statusEl.textContent = "please enter departure and destination city";
+    resultEl.innerHTML = "";
+    return;
+  }
+
   statusEl.textContent = "loading...";
   resultEl.innerHTML = "";
 
@@ -23,11 +32,21 @@ async function getFlights() {
       };
     });
 
-    const sorted = flights.sort(function (a, b) {
+    const filtered = flights.filter(function (f) {
+      return (
+        (f.from === from && f.to === to) ||
+        (f.from === to && f.to === from)
+      );
+    });
+
+    const sorted = filtered.sort(function (a, b) {
       return a.price - b.price;
     });
 
-    resultEl.innerHTML = "";
+    if (sorted.length === 0) {
+      statusEl.textContent = "no flights";
+      return;
+    }
 
     sorted.map(function (f) {
       resultEl.innerHTML +=
