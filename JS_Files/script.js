@@ -5,7 +5,7 @@ const resultEl = document.getElementById("result");
 btn.addEventListener("click", getFlights);
 
 async function getFlights() {
-   statusEl.textContent = "loading...";
+  statusEl.textContent = "loading...";
   resultEl.innerHTML = "";
 
   try {
@@ -15,23 +15,31 @@ async function getFlights() {
     const list = data.users;
 
     const flights = list.map(function (u, index) {
+      return {
+        airline: u.company.name,
+        from: index % 2 === 0 ? "DEL" : "BOM",
+        to: index % 2 === 0 ? "BOM" : "DEL",
+        price: u.age * 200
+      };
     });
-    resultEl.innerHTML =
-      "<div class='card'>" +
-      "<div class='price'>₹" +
-      cheapest.price +
-      "</div>" +
-      "<div><b>Airline:</b> " +
-      cheapest.airline +
-      "</div>" +
-      "<div><b>Route:</b> " +
-      cheapest.from +
-      " → " +
-      cheapest.to +
-      "</div>" +
-      "</div>";
+
+    const sorted = flights.sort(function (a, b) {
+      return a.price - b.price;
+    });
+
+    resultEl.innerHTML = "";
+
+    sorted.map(function (f) {
+      resultEl.innerHTML +=
+        "<div class='card'>" +
+        "<div class='price'>₹" + f.price + "</div>" +
+        "<div><b>Airline:</b> " + f.airline + "</div>" +
+        "<div><b>Route:</b> " + f.from + " → " + f.to + "</div>" +
+        "</div>";
+    });
 
     statusEl.textContent = "done";
+
   } catch (err) {
     statusEl.textContent = "error";
     console.log(err);
